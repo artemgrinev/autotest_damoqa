@@ -21,3 +21,6 @@ class BasePage:
 
     def element_are_present(self, locator, timeout=5):  # Если необходимо проверить присутствия элементов в DOM.
         return wait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator))
+
+    def go_to_element(self, element):  # проскролить к искомому элементу
+        self.driver.execute_script("arguments[0].scrollIntoView();", element)
