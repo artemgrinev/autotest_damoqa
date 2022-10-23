@@ -1,3 +1,5 @@
+import random
+
 from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage
 import time
 
@@ -41,12 +43,17 @@ class TestRadioButton:
 
 
 class TestWebTable:
-    def test_table_add_person(self, driver):
+    def test_web_table_add_person(self, driver):
         web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
         web_table_page.open()
         person = web_table_page.add_persons()
         full_people_list = web_table_page.check_added_person()
-        print(person)
-        print(full_people_list)
         assert person in full_people_list
 
+    def test_web_table_search_person(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        key_word = web_table_page.add_persons()[random.randint(0, 5)]
+        web_table_page.search_person(key_word)
+        table_result = web_table_page.check_search_person()
+        assert key_word in table_result

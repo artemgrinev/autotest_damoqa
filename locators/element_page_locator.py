@@ -40,3 +40,6 @@ class WebTablePageLocators:
     SUBMIT_BUTTON = (By.CSS_SELECTOR, "button[id='submit']")
 
     ALL_TABLE_LIST = (By.CSS_SELECTOR, "div[class='rt-tr-group']")
+    SEARCH_INPUT = (By.CSS_SELECTOR, "input[id='searchBox']")
+    DELETE_BUTTON = (By.CSS_SELECTOR, "span[title='Delete']")
+    ROW_PARENT = ".//ancestor::div[@class='rt-tr-group']"
