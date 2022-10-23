@@ -1,7 +1,8 @@
 import random
 
 from generator.generators import generator_person
-from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators
+from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
+    WebTablePageLocators
 from pages.base_page import BasePage
 
 
@@ -69,5 +70,39 @@ class RadioButtonPage(BasePage):
 
     def get_result(self):
         return self.element_is_present(self.locators.OUTPUT_RESULT).text
+
+
+class WebTablePage(BasePage):
+    locators = WebTablePageLocators()
+
+    def add_persons(self):
+        count = 1
+        while count != 0:
+            person_info = next(generator_person())
+            first_name = person_info.firstname
+            last_name = person_info.lastname
+            email = person_info.email
+            age = random.randint(14, 100)
+            salary = random.randint(1000, 5000)
+            departament = person_info.departament
+            self.element_is_visible(self.locators.ADD_BUTTON).click()
+            self.element_is_visible(self.locators.FIRST_NAME_INPUT).send_keys(first_name)
+            self.element_is_visible(self.locators.LAST_NAME_INPUT).send_keys(last_name)
+            self.element_is_visible(self.locators.EMAIL_INPUT).send_keys(email)
+            self.element_is_visible(self.locators.AGE_INPUT).send_keys(age)
+            self.element_is_visible(self.locators.SALARY_INPUT).send_keys(salary)
+            self.element_is_visible(self.locators.DEPARTAMENT_INPUT).send_keys(departament)
+            self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
+            count -= 1
+            return [first_name, last_name, str(age), email, str(salary), departament]
+
+    def check_added_person(self):
+        people_list = self.element_are_visible(self.locators.ALL_TABLE_LIST)
+        data = [item.text.splitlines() for item in people_list]
+        return data
+
+
+
+
 
 
