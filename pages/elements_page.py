@@ -1,5 +1,7 @@
+import random
+
 from generator.generators import generator_person
-from locators.element_page_locator import TextBoxPageLocators
+from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators
 from pages.base_page import BasePage
 
 
@@ -25,4 +27,47 @@ class TextBoxPage(BasePage):
         output_cur_addr = self.element_is_present(self.locators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
         output_perm_addr = self.element_is_present(self.locators.CREATED_PERMANENT_ADDRESS).text.split(':')[1]
         return output_name, output_email, output_cur_addr, output_perm_addr
+
+
+class CheckBoxPage(BasePage):
+    locators = CheckBoxPageLocators()
+
+    def open_full_list(self):
+        self.element_is_visible(self.locators.EXPAND_ALL_BUTTON).click()
+
+    def click_random_check_box(self):
+        item_list = self.element_are_visible(self.locators.ITEM_LIST)
+        count = 21
+        while count != 0:
+            if count > 0:
+                item = item_list[random.randint(1, 15)]
+                self.go_to_element(item)
+                item.click()
+                count -= 1
+            else:
+                break
+
+    def get_checked_checkbox(self):
+        checked_items = self.element_are_present(self.locators.CHECKED_ITEMS)
+        data = [i.find_element("xpath", self.locators.TITLE_ITEM).text for i in checked_items]
+        return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
+
+    def get_output_result(self):
+        result_list = self.element_are_present(self.locators.ITEM_LIST_OUTPUT)
+        data = [i.text for i in result_list]
+        return str(data).replace(' ', '').lower()
+
+
+class RadioButtonPage(BasePage):
+    locators = RadioButtonLocators()
+
+    def click_random_radio_button(self, choice):
+        choices = {"yes": self.locators.LABEL_YES,
+                   "impressive": self.locators.LABEL_IMPRESSIVE,
+                   "no": self.locators.LABEL_NO}
+        self.element_is_visible(choices[choice]).click()
+
+    def get_result(self):
+        return self.element_is_present(self.locators.OUTPUT_RESULT).text
+
 
