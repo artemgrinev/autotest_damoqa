@@ -56,4 +56,14 @@ class TestWebTable:
         key_word = web_table_page.add_persons()[random.randint(0, 5)]
         web_table_page.search_person(key_word)
         table_result = web_table_page.check_search_person()
-        assert key_word in table_result
+        assert key_word in table_result, "the person was not found in a table"
+
+    def test_web_table_update_person_info(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        row_to_search = web_table_page.add_persons()[random.randint(0, 5)]
+        web_table_page.search_person(row_to_search)
+        update_person = web_table_page.update_person_info()
+        row = web_table_page.check_search_person()
+        print(row)
+        print(update_person)

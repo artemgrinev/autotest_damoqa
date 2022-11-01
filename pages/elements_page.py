@@ -1,4 +1,5 @@
 import random
+import time
 
 from generator.generators import generator_person
 from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
@@ -108,3 +109,31 @@ class WebTablePage(BasePage):
         delete_button = self.element_is_visible(self.locators.DELETE_BUTTON)
         row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
         return row.text.splitlines()
+
+    def update_person_info(self):
+        person_info = next(generator_person())
+        locators_dict = {"first_name": self.locators.FIRST_NAME_INPUT,
+                         "last_name": self.locators.LAST_NAME_INPUT,
+                         "email": self.locators.EMAIL_INPUT,
+                         "age": self.locators.AGE_INPUT,
+                         "salary": self.locators.SALARY_INPUT,
+                         "departament": self.locators.DEPARTAMENT_INPUT
+                         }
+        person_info_dict = {"first_name": person_info.firstname,
+                            "last_name": person_info.lastname,
+                            "email": person_info.email,
+                            "age": random.randint(14, 100),
+                            "salary": random.randint(1000, 5000),
+                            "departament": person_info.departament
+                            }
+        row_to_update = list(person_info_dict.keys())[random.randint(0, 5)]
+        info_to_update = person_info_dict[row_to_update]
+        self.element_is_visible(self.locators.UPDATE_BUTTON).click()
+        time.sleep(3)
+        self.element_is_visible(locators_dict[row_to_update]).clear()
+        self.element_is_visible(locators_dict[row_to_update]).send_keys(info_to_update)
+        self.element_is_visible(self.locators.SUBMIT_BUTTON)
+        time.sleep(5)
+        return info_to_update
+
+
