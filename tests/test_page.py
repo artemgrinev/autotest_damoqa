@@ -65,5 +65,21 @@ class TestWebTable:
         web_table_page.search_person(row_to_search)
         update_person = web_table_page.update_person_info()
         row = web_table_page.check_search_person()
-        print(row)
-        print(update_person)
+        assert update_person in row, "no change has been made"
+
+    def test_web_table_delete_person_info(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        email = web_table_page.add_persons()[3]
+        web_table_page.search_person(email)
+        web_table_page.delete_person()
+        text = web_table_page.check_deleted()
+        assert text == "No rows found", "Person is not deleted"
+
+    def test_change_count_of_rows(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        rows = web_table_page.select_up_to_row()
+        result_rows = web_table_page.count_of_rows()
+        assert rows == result_rows, "The number of rows does not match the specified"
+

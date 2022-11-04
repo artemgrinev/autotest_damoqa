@@ -132,8 +132,26 @@ class WebTablePage(BasePage):
         time.sleep(3)
         self.element_is_visible(locators_dict[row_to_update]).clear()
         self.element_is_visible(locators_dict[row_to_update]).send_keys(info_to_update)
-        self.element_is_visible(self.locators.SUBMIT_BUTTON)
-        time.sleep(5)
+        self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
         return info_to_update
+
+    def delete_person(self):
+        self.element_is_visible(self.locators.DELETE_BUTTON).click()
+
+    def check_deleted(self):
+        return self.element_is_present(self.locators.NO_FOUND).text
+
+    def select_up_to_row(self):
+        drop_dawn_page = self.element_is_visible(self.locators.ROW_PAGE_DROP_DAWN)
+        self.go_to_element(drop_dawn_page)
+        drop_dawn_page.click()
+        list_rows = self.element_are_visible(self.locators.ROWS_TABLE_LIST)
+        random_element = list(list_rows)[random.randint(0, 5)]
+        random_element.click()
+        return int(random_element.text.split()[0])
+
+    def count_of_rows(self):
+        all_rows = list(self.element_are_visible(self.locators.ROWS))
+        return len(all_rows)
 
 
