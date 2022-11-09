@@ -1,7 +1,9 @@
 import random
+import time
 
 from generator.generators import generator_person
-from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators
+from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
+    WebTablePageLocators
 from pages.base_page import BasePage
 
 
@@ -69,5 +71,87 @@ class RadioButtonPage(BasePage):
 
     def get_result(self):
         return self.element_is_present(self.locators.OUTPUT_RESULT).text
+
+
+class WebTablePage(BasePage):
+    locators = WebTablePageLocators()
+
+    def add_persons(self):
+        count = 1
+        while count != 0:
+            person_info = next(generator_person())
+            first_name = person_info.firstname
+            last_name = person_info.lastname
+            email = person_info.email
+            age = random.randint(14, 100)
+            salary = random.randint(1000, 5000)
+            departament = person_info.departament
+            self.element_is_visible(self.locators.ADD_BUTTON).click()
+            self.element_is_visible(self.locators.FIRST_NAME_INPUT).send_keys(first_name)
+            self.element_is_visible(self.locators.LAST_NAME_INPUT).send_keys(last_name)
+            self.element_is_visible(self.locators.EMAIL_INPUT).send_keys(email)
+            self.element_is_visible(self.locators.AGE_INPUT).send_keys(age)
+            self.element_is_visible(self.locators.SALARY_INPUT).send_keys(salary)
+            self.element_is_visible(self.locators.DEPARTAMENT_INPUT).send_keys(departament)
+            self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
+            count -= 1
+            return [first_name, last_name, str(age), email, str(salary), departament]
+
+    def check_added_person(self):
+        people_list = self.element_are_visible(self.locators.ALL_TABLE_LIST)
+        data = [item.text.splitlines() for item in people_list]
+        return data
+
+    def search_person(self, key_word):
+        self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)
+
+    def check_search_person(self):
+        delete_button = self.element_is_visible(self.locators.DELETE_BUTTON)
+        row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
+        return row.text.splitlines()
+
+    def update_person_info(self):
+        person_info = next(generator_person())
+        locators_dict = {"first_name": self.locators.FIRST_NAME_INPUT,
+                         "last_name": self.locators.LAST_NAME_INPUT,
+                         "email": self.locators.EMAIL_INPUT,
+                         "age": self.locators.AGE_INPUT,
+                         "salary": self.locators.SALARY_INPUT,
+                         "departament": self.locators.DEPARTAMENT_INPUT
+                         }
+        person_info_dict = {"first_name": person_info.firstname,
+                            "last_name": person_info.lastname,
+                            "email": person_info.email,
+                            "age": random.randint(14, 100),
+                            "salary": random.randint(1000, 5000),
+                            "departament": person_info.departament
+                            }
+        row_to_update = list(person_info_dict.keys())[random.randint(0, 5)]
+        info_to_update = person_info_dict[row_to_update]
+        self.element_is_visible(self.locators.UPDATE_BUTTON).click()
+        time.sleep(3)
+        self.element_is_visible(locators_dict[row_to_update]).clear()
+        self.element_is_visible(locators_dict[row_to_update]).send_keys(info_to_update)
+        self.element_is_visible(self.locators.SUBMIT_BUTTON).click()
+        return info_to_update
+
+    def delete_person(self):
+        self.element_is_visible(self.locators.DELETE_BUTTON).click()
+
+    def check_deleted(self):
+        return self.element_is_present(self.locators.NO_FOUND).text
+
+    def select_up_to_row(self):
+        drop_dawn_page = self.element_is_visible(self.locators.ROW_PAGE_DROP_DAWN)
+        self.go_to_element(drop_dawn_page)
+        drop_dawn_page.click()
+        list_rows = self.element_are_visible(self.locators.ROWS_TABLE_LIST)
+        random_element = list(list_rows)[random.randint(0, 5)]
+        random_element.click()
+        return int(random_element.text.split()[0])
+
+    def count_of_rows(self):
+        all_rows = list(self.element_are_visible(self.locators.ROWS))
+        return len(all_rows)
 
 

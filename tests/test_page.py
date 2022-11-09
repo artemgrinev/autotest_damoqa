@@ -1,4 +1,6 @@
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage
+import random
+
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage
 import time
 
 
@@ -39,4 +41,45 @@ class TestRadioButton:
         assert output_impressive == "Impressive", '"Impressive" have not been selected'
         assert output_no == "No", '"No" have not been selected'
 
+
+class TestWebTable:
+    def test_web_table_add_person(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        person = web_table_page.add_persons()
+        full_people_list = web_table_page.check_added_person()
+        assert person in full_people_list
+
+    def test_web_table_search_person(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        key_word = web_table_page.add_persons()[random.randint(0, 5)]
+        web_table_page.search_person(key_word)
+        table_result = web_table_page.check_search_person()
+        assert key_word in table_result, "the person was not found in a table"
+
+    def test_web_table_update_person_info(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        row_to_search = web_table_page.add_persons()[random.randint(0, 5)]
+        web_table_page.search_person(row_to_search)
+        update_person = web_table_page.update_person_info()
+        row = web_table_page.check_search_person()
+        assert update_person in row, "no change has been made"
+
+    def test_web_table_delete_person_info(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        email = web_table_page.add_persons()[3]
+        web_table_page.search_person(email)
+        web_table_page.delete_person()
+        text = web_table_page.check_deleted()
+        assert text == "No rows found", "Person is not deleted"
+
+    def test_change_count_of_rows(self, driver):
+        web_table_page = WebTablePage(driver, "https://demoqa.com/webtables")
+        web_table_page.open()
+        rows = web_table_page.select_up_to_row()
+        result_rows = web_table_page.count_of_rows()
+        assert rows == result_rows, "The number of rows does not match the specified"
 
