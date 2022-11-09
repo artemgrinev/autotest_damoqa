@@ -51,3 +51,12 @@ class WebTablePageLocators:
 
     NO_FOUND = (By.CSS_SELECTOR, "div[class='rt-noData']")
 
+
+class ButtonPageLocators:
+    DOUBLE_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='doubleClickBtn']")
+    RIGHT_CLICK_BUTTON = (By.CSS_SELECTOR, "button[id='rightClickBtn']")
+    DYNAMIC_CLICK_BUTTON = (By.CSS_SELECTOR, "div[class='mt-4']:nth-child(3) > button")
+
+    DOUBLE_CLICK_MASSAGE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
+    RIGHT_CLICK_MASSAGE = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
+    DYNAMIC_CLICK_MASSAGE = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")

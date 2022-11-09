@@ -3,7 +3,7 @@ import time
 
 from generator.generators import generator_person
 from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
-    WebTablePageLocators
+    WebTablePageLocators, ButtonPageLocators
 from pages.base_page import BasePage
 
 
@@ -153,5 +153,23 @@ class WebTablePage(BasePage):
     def count_of_rows(self):
         all_rows = list(self.element_are_visible(self.locators.ROWS))
         return len(all_rows)
+
+
+class ButtonPage(BasePage):
+    locators = ButtonPageLocators()
+
+    def check_double_click(self):
+        btn = self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON)
+        self.double_click_action(btn)
+        return self.element_is_visible(self.locators.DOUBLE_CLICK_MASSAGE).text
+
+    def check_right_click(self):
+        btn = self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON)
+        self.right_click_action(btn)
+        return self.element_is_visible(self.locators.RIGHT_CLICK_MASSAGE).text
+
+    def check_dynamic_click(self):
+        self.element_is_visible(self.locators.DYNAMIC_CLICK_BUTTON).click()
+        return self.element_is_visible(self.locators.DYNAMIC_CLICK_MASSAGE).text
 
 

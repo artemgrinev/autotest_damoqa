@@ -1,3 +1,4 @@
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -24,3 +25,16 @@ class BasePage:
 
     def go_to_element(self, element):  # проскролить к искомому элементу
         self.driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    def element_is_clickable(self, locator, timeout=5):  # Чтобы элемент был кликабельным.
+        return wait(self.driver, timeout).until(EC.element_to_be_clickable(locator))
+
+    def double_click_action(self, element):
+        actions = ActionChains(self.driver)
+        actions.double_click(element)
+        actions.perform()
+
+    def right_click_action(self, element):
+        actions = ActionChains(self.driver)
+        actions.context_click(element)
+        actions.perform()
