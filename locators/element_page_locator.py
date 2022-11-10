@@ -60,3 +60,16 @@ class ButtonPageLocators:
     DOUBLE_CLICK_MASSAGE = (By.CSS_SELECTOR, "p[id='doubleClickMessage']")
     RIGHT_CLICK_MASSAGE = (By.CSS_SELECTOR, "p[id='rightClickMessage']")
     DYNAMIC_CLICK_MASSAGE = (By.CSS_SELECTOR, "p[id='dynamicClickMessage']")
+
+
+class LinksPageLocators:
+    # ALL_LINKS = (By.CSS_SELECTOR, "div[id='linkWrapper'] > p > a")
+    # SIMPLE_LINKS = (By.CSS_SELECTOR, "a[id='simpleLink']")
+    CREATED_LINKS = (By.XPATH, "//*[normalize-space(.)='Created']/a")
+    SIMPLE_LINKS = (By.XPATH, "//*[normalize-space(.)='Home']/a")
+    NO_CONTENT_LINKS = (By.XPATH, "//*[normalize-space(.)='No Content']/a")
+    BAD_REQUEST_LINKS = (By.XPATH, "//*[normalize-space(.)='Bad Request']/a")
+    NOT_FOUND_LINKS = (By.XPATH, "//*[normalize-space(.)='Not Found']/a")
+
+
+

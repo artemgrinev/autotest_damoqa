@@ -1,6 +1,6 @@
 import random
 
-from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonPage
+from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonPage, LinksPage
 import time
 
 
@@ -98,3 +98,24 @@ class TestButtons:
         assert press_right_clk_btn == check_str_for_right_clk_btn, "The right click button was not pressed"
         assert press_dynamic_clk_btn == check_str_for_dynamic_clk_btn, "The click button was not pressed"
 
+
+class TestLinks:
+    def test_open_links(self, driver):
+        links_page = LinksPage(driver, "https://demoqa.com/links")
+        links_page.open()
+        status, href, element = links_page.good_request_get_status_code()
+        url = links_page.open_windows_get_url(element)
+        assert href == url, "the link will enter the correct url"
+
+    def test_request_code(self, driver):
+        links_page = LinksPage(driver, "https://demoqa.com/links")
+        links_page.open()
+        good_status, good_request_href, element = links_page.good_request_get_status_code()
+        no_content_status, no_content_href = links_page.no_content_get_status_code()
+        created_status, created_href = links_page.created_get_status_code()
+        not_found_status, not_found_href = links_page.not_found_get_status_code()
+        assert not_found_status == 404, f"when clicking on the link {not_found_href} received status {not_found_status}"
+        assert created_status == 201, f"when clicking on the link {created_href} received status {created_status}"
+        assert no_content_status == 204, f"when clicking on the link " \
+                                         f"{no_content_href} received status {no_content_status}"
+        assert good_status == 200, f"when clicking on the link {good_request_href} received status {good_status}"

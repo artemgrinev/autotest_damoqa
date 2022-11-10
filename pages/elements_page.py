@@ -1,9 +1,11 @@
 import random
 import time
 
+import requests
+
 from generator.generators import generator_person
 from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
-    WebTablePageLocators, ButtonPageLocators
+    WebTablePageLocators, ButtonPageLocators, LinksPageLocators
 from pages.base_page import BasePage
 
 
@@ -171,5 +173,45 @@ class ButtonPage(BasePage):
     def check_dynamic_click(self):
         self.element_is_visible(self.locators.DYNAMIC_CLICK_BUTTON).click()
         return self.element_is_visible(self.locators.DYNAMIC_CLICK_MASSAGE).text
+
+
+class LinksPage(BasePage):
+    locators = LinksPageLocators()
+
+    def good_request_get_status_code(self):
+        element = self.element_is_visible(self.locators.SIMPLE_LINKS)
+        href = element.get_attribute('href')
+        status = requests.get(href).status_code
+        return status, href, element
+
+    def get_status_code_link(self, locator):
+        element = self.element_is_visible(locator)
+        href = f"https://demoqa.com/{element.get_attribute('id')}"
+        status = requests.get(href).status_code
+        return status, href
+
+    def created_get_status_code(self):
+        status, href = self.get_status_code_link(self.locators.CREATED_LINKS)
+        return status, href
+
+    def no_content_get_status_code(self):
+        status, href = self.get_status_code_link(self.locators.NO_CONTENT_LINKS)
+        return status, href
+
+    def bad_request_get_status_code(self):
+        status, href = self.get_status_code_link(self.locators.BAD_REQUEST_LINKS)
+        return status, href
+
+    def not_found_get_status_code(self):
+        status, href = self.get_status_code_link(self.locators.NOT_FOUND_LINKS)
+        return status, href
+
+    def open_windows_get_url(self, element):
+        element.click()
+        window_after = self.driver.window_handles[1]
+        self.driver.switch_to.window(window_after)
+        url = self.driver.current_url
+        return url
+
 
 
