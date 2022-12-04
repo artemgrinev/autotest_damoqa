@@ -34,7 +34,6 @@ def generator_person_us():
         firstname=faker_us.first_name(),
         lastname=faker_us.last_name(),
         email=faker_us.email(),
-        mobile=faker_us.msisdn(),
         current_address=faker_us.address(),
     )
 

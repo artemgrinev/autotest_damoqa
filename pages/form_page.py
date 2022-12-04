@@ -20,7 +20,7 @@ class TextForm(BasePage):
         first_name = person_info.firstname
         last_name = person_info.lastname
         email = person_info.email
-        mobile = person_info.mobile
+        mobile = "1005480054"
         current_address = person_info.current_address
         subjects = value_subjects[random.randint(0, len(value_subjects))]
         self.element_is_visible(self.locator.FIRST_NAME).send_keys(first_name)
@@ -30,7 +30,7 @@ class TextForm(BasePage):
         self.element_is_visible(self.locator.SUBJECTS).send_keys(subjects)
         self.click_to_enter()
         self.element_is_visible(self.locator.ADDRESS).send_keys(current_address)
-        return f"{first_name} {last_name}", email, mobile, subjects, current_address
+        return f"{first_name} {last_name}", email, mobile, subjects, current_address.replace("\n", " ")
 
     def select_random_month(self):
         self.element_is_visible(self.locator.DATE_OF_BIRTH_INPUT).click()
@@ -69,7 +69,7 @@ class TextForm(BasePage):
         file_name, path = generated_file()
         self.element_is_present(self.locator.UPLOAD_PICTURE_BTN).send_keys(path)
         os.remove(path)
-        return file_name
+        return file_name.split("\\")[-1]
 
     def select_random_radio(self):
         element = self.element_is_present(self.locator.ALL_GENDER_RADIO)

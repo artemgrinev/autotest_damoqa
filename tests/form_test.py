@@ -11,7 +11,7 @@ class TestRegistrationForm:
         month, month_num = registration_page.select_random_month()
         year = registration_page.select_random_year()
         day = registration_page.select_random_day(int(year), month_num)
-        full_deta = f"{day} {month} {year}"
+        full_deta = f"{day} {month},{year}"
         gender = registration_page.select_random_radio()
         hobbies = registration_page.select_random_checkbox()
         file_name = registration_page.select_file()
@@ -22,5 +22,4 @@ class TestRegistrationForm:
         result_data = registration_page.get_result_table()
         selected_data = [full_name, email, gender, mobile, full_deta, subjects,
                          hobbies, file_name, current_address, address]
-
         assert selected_data == result_data, "Полученная дата не соответствует выбранной"

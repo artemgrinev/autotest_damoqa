@@ -3,7 +3,7 @@ import time
 
 import requests
 
-from generator.generators import generator_person
+from generator.generators import generator_person_ru
 from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
     WebTablePageLocators, ButtonPageLocators, LinksPageLocators
 from pages.base_page import BasePage
@@ -13,7 +13,7 @@ class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
 
     def fill_all_fields(self):
-        person_info = next(generator_person())
+        person_info = next(generator_person_ru())
         full_name = person_info.full_name
         email = person_info.email
         current_address = person_info.current_address
@@ -113,7 +113,7 @@ class WebTablePage(BasePage):
         return row.text.splitlines()
 
     def update_person_info(self):
-        person_info = next(generator_person())
+        person_info = next(generator_person_ru())
         locators_dict = {"first_name": self.locators.FIRST_NAME_INPUT,
                          "last_name": self.locators.LAST_NAME_INPUT,
                          "email": self.locators.EMAIL_INPUT,
