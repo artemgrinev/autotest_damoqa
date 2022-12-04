@@ -1,6 +1,8 @@
-from selenium.webdriver import ActionChains
+import random
+
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver import ActionChains, Keys
 
 
 class BasePage:
@@ -38,3 +40,23 @@ class BasePage:
         actions = ActionChains(self.driver)
         actions.context_click(element)
         actions.perform()
+
+    def click_to_element(self, element):
+        actions = ActionChains(self.driver)
+        actions.move_to_element(element).click()
+        actions.perform()
+
+    def click_to_enter(self):
+        actions = ActionChains(self.driver)
+        actions.send_keys(Keys.ENTER)
+        actions.perform()
+
+    def click_to_arrow_down(self):
+        actions = ActionChains(self.driver)
+        for i in range(random.randint(3, 20)):
+            actions.send_keys(Keys.ARROW_DOWN)
+        actions.perform()
+
+    def remove_ads(self):
+        self.driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
+        self.driver.execute_script("document.getElementById('fixedban').remove();")
