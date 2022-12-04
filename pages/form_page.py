@@ -14,7 +14,7 @@ from pages.base_page import BasePage
 class TextForm(BasePage):
     locator = WebFormLocators()
 
-    def fill_all_text_fields(self):
+    def fill_all_text_fields(self) -> tuple:
         self.remove_ads()
         person_info = next(generator_person_us())
         first_name = person_info.firstname
@@ -32,7 +32,7 @@ class TextForm(BasePage):
         self.element_is_visible(self.locator.ADDRESS).send_keys(current_address)
         return f"{first_name} {last_name}", email, mobile, subjects, current_address.replace("\n", " ")
 
-    def select_random_month(self):
+    def select_random_month(self) -> tuple:
         self.element_is_visible(self.locator.DATE_OF_BIRTH_INPUT).click()
         month_num = random.randint(0, 11)
         random_month = self.element_are_visible(self.locator.SELECT_MONTH)[month_num]
@@ -40,13 +40,13 @@ class TextForm(BasePage):
         random_month.click()
         return month, month_num
 
-    def select_random_year(self):
+    def select_random_year(self) -> str:
         random_year = self.element_are_visible(self.locator.SELECT_YEAR)[random.randint(0, 200)]
         year = random_year.text
         random_year.click()
         return year
 
-    def select_random_day(self, year, month):
+    def select_random_day(self, year, month) -> str:
         count_days = monthrange(year, month+1)[1]
         random_day = random.randint(1, count_days)
         if random_day > 9:
@@ -58,26 +58,26 @@ class TextForm(BasePage):
         self.click_to_element(element)
         return day
 
-    def get_result_deta(self):
+    def get_result_deta(self) -> str:
         element = self.element_is_present(self.locator.DATE_OF_BIRTH_INPUT).get_attribute('value')
         day = element.split()[0]
         month = element.split()[1]
         year = element.split()[2]
         return f"{int(day)} {month} {year}"
 
-    def select_file(self):
+    def select_file(self) -> str:
         file_name, path = generated_file()
         self.element_is_present(self.locator.UPLOAD_PICTURE_BTN).send_keys(path)
         os.remove(path)
         return file_name.split("\\")[-1]
 
-    def select_random_radio(self):
+    def select_random_radio(self) -> str:
         element = self.element_is_present(self.locator.ALL_GENDER_RADIO)
         gender = element.text
         element.click()
         return gender
 
-    def select_random_checkbox(self):
+    def select_random_checkbox(self) -> str:
         element = self.element_is_present(self.locator.ALL_HOBBIES)
         hobbies = element.text
         element.click()
@@ -93,7 +93,7 @@ class TextForm(BasePage):
         self.click_to_arrow_down()
         self.click_to_enter()
 
-    def get_result_citi_state(self):
+    def get_result_citi_state(self) -> str:
         elements = self.element_are_present(self.locator.RESULT_STATE_INPUT)
         state = elements[0].text
         citi = elements[1].text
@@ -103,7 +103,7 @@ class TextForm(BasePage):
         self.go_to_element(self.element_is_visible(self.locator.SUBMIT))
         self.element_is_present(self.locator.SUBMIT).click()
 
-    def get_result_table(self):
+    def get_result_table(self) -> list:
         result_list = self.element_are_visible(self.locator.RESULT_TABLE)
         data = []
         for item in result_list:

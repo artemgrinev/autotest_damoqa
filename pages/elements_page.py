@@ -2,6 +2,7 @@ import random
 import time
 
 import requests
+from selenium.webdriver.remote.webelement import WebElement
 
 from generator.generators import generator_person_ru
 from locators.element_page_locator import TextBoxPageLocators, CheckBoxPageLocators, RadioButtonLocators, \
@@ -12,7 +13,7 @@ from pages.base_page import BasePage
 class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
 
-    def fill_all_fields(self):
+    def fill_all_fields(self) -> tuple:
         person_info = next(generator_person_ru())
         full_name = person_info.full_name
         email = person_info.email
@@ -25,7 +26,7 @@ class TextBoxPage(BasePage):
         self.element_is_visible(self.locators.SUBMIT).click()
         return full_name, email, current_address, permanent_address
 
-    def check_fill_form(self):
+    def check_fill_form(self) -> tuple:
         output_name = self.element_is_present(self.locators.CREATED_FULL_NAME).text.split(':')[1]
         output_email = self.element_is_present(self.locators.CREATED_EMAIL).text.split(':')[1]
         output_cur_addr = self.element_is_present(self.locators.CREATED_CURRENT_ADDRESS).text.split(':')[1]
@@ -51,12 +52,12 @@ class CheckBoxPage(BasePage):
             else:
                 break
 
-    def get_checked_checkbox(self):
+    def get_checked_checkbox(self) -> str:
         checked_items = self.element_are_present(self.locators.CHECKED_ITEMS)
         data = [i.find_element("xpath", self.locators.TITLE_ITEM).text for i in checked_items]
         return str(data).replace(' ', '').replace('doc', '').replace('.', '').lower()
 
-    def get_output_result(self):
+    def get_output_result(self) -> str:
         result_list = self.element_are_present(self.locators.ITEM_LIST_OUTPUT)
         data = [i.text for i in result_list]
         return str(data).replace(' ', '').lower()
@@ -65,23 +66,23 @@ class CheckBoxPage(BasePage):
 class RadioButtonPage(BasePage):
     locators = RadioButtonLocators()
 
-    def click_random_radio_button(self, choice):
+    def click_random_radio_button(self, choice: str):
         choices = {"yes": self.locators.LABEL_YES,
                    "impressive": self.locators.LABEL_IMPRESSIVE,
                    "no": self.locators.LABEL_NO}
         self.element_is_visible(choices[choice]).click()
 
-    def get_result(self):
+    def get_result(self) -> str:
         return self.element_is_present(self.locators.OUTPUT_RESULT).text
 
 
 class WebTablePage(BasePage):
     locators = WebTablePageLocators()
 
-    def add_persons(self):
+    def add_persons(self) -> list:
         count = 1
         while count != 0:
-            person_info = next(generator_person())
+            person_info = next(generator_person_ru())
             first_name = person_info.firstname
             last_name = person_info.lastname
             email = person_info.email
@@ -99,20 +100,20 @@ class WebTablePage(BasePage):
             count -= 1
             return [first_name, last_name, str(age), email, str(salary), departament]
 
-    def check_added_person(self):
+    def check_added_person(self) -> list:
         people_list = self.element_are_visible(self.locators.ALL_TABLE_LIST)
         data = [item.text.splitlines() for item in people_list]
         return data
 
-    def search_person(self, key_word):
+    def search_person(self, key_word: str):
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)
 
-    def check_search_person(self):
+    def check_search_person(self) -> list:
         delete_button = self.element_is_visible(self.locators.DELETE_BUTTON)
         row = delete_button.find_element("xpath", self.locators.ROW_PARENT)
         return row.text.splitlines()
 
-    def update_person_info(self):
+    def update_person_info(self) -> list:
         person_info = next(generator_person_ru())
         locators_dict = {"first_name": self.locators.FIRST_NAME_INPUT,
                          "last_name": self.locators.LAST_NAME_INPUT,
@@ -143,7 +144,7 @@ class WebTablePage(BasePage):
     def check_deleted(self):
         return self.element_is_present(self.locators.NO_FOUND).text
 
-    def select_up_to_row(self):
+    def select_up_to_row(self) -> int:
         drop_dawn_page = self.element_is_visible(self.locators.ROW_PAGE_DROP_DAWN)
         self.go_to_element(drop_dawn_page)
         drop_dawn_page.click()
@@ -152,7 +153,7 @@ class WebTablePage(BasePage):
         random_element.click()
         return int(random_element.text.split()[0])
 
-    def count_of_rows(self):
+    def count_of_rows(self) -> int:
         all_rows = list(self.element_are_visible(self.locators.ROWS))
         return len(all_rows)
 
@@ -160,17 +161,17 @@ class WebTablePage(BasePage):
 class ButtonPage(BasePage):
     locators = ButtonPageLocators()
 
-    def check_double_click(self):
+    def check_double_click(self) -> str:
         btn = self.element_is_visible(self.locators.DOUBLE_CLICK_BUTTON)
         self.double_click_action(btn)
         return self.element_is_visible(self.locators.DOUBLE_CLICK_MASSAGE).text
 
-    def check_right_click(self):
+    def check_right_click(self) -> str:
         btn = self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON)
         self.right_click_action(btn)
         return self.element_is_visible(self.locators.RIGHT_CLICK_MASSAGE).text
 
-    def check_dynamic_click(self):
+    def check_dynamic_click(self) -> str:
         self.element_is_visible(self.locators.DYNAMIC_CLICK_BUTTON).click()
         return self.element_is_visible(self.locators.DYNAMIC_CLICK_MASSAGE).text
 
@@ -178,35 +179,35 @@ class ButtonPage(BasePage):
 class LinksPage(BasePage):
     locators = LinksPageLocators()
 
-    def good_request_get_status_code(self):
+    def good_request_get_status_code(self) -> tuple:
         element = self.element_is_visible(self.locators.SIMPLE_LINKS)
         href = element.get_attribute('href')
         status = requests.get(href).status_code
         return status, href, element
 
-    def get_status_code_link(self, locator):
+    def get_status_code_link(self, locator: tuple) -> tuple:
         element = self.element_is_visible(locator)
         href = f"https://demoqa.com/{element.get_attribute('id')}"
         status = requests.get(href).status_code
         return status, href
 
-    def created_get_status_code(self):
+    def created_get_status_code(self) -> tuple:
         status, href = self.get_status_code_link(self.locators.CREATED_LINKS)
         return status, href
 
-    def no_content_get_status_code(self):
+    def no_content_get_status_code(self) -> tuple:
         status, href = self.get_status_code_link(self.locators.NO_CONTENT_LINKS)
         return status, href
 
-    def bad_request_get_status_code(self):
+    def bad_request_get_status_code(self) -> tuple:
         status, href = self.get_status_code_link(self.locators.BAD_REQUEST_LINKS)
         return status, href
 
-    def not_found_get_status_code(self):
+    def not_found_get_status_code(self) -> tuple:
         status, href = self.get_status_code_link(self.locators.NOT_FOUND_LINKS)
         return status, href
 
-    def open_windows_get_url(self, element):
+    def open_windows_get_url(self, element: WebElement) -> str:
         element.click()
         window_after = self.driver.window_handles[1]
         self.driver.switch_to.window(window_after)
