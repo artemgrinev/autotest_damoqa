@@ -15,50 +15,52 @@ class BasePage:
     def open(self):
         self._driver.get(self._url)
 
-    def _element_is_visible(self, locator: tuple, timeout=5) -> WebElement:  # Если необходимо чтобы элемент был видимым
+    def element_is_visible(self, locator: tuple, timeout=5) -> WebElement:  # Если необходимо чтобы элемент был видимым
         return wait(self._driver, timeout).until(EC.visibility_of_element_located(locator))
 
-    def _element_are_visible(self, locator: tuple, timeout=5) -> list[WebElement]:  # Если необходимо чтобы все элементы были видимыми
+    def element_are_visible(self, locator: tuple, timeout=5) -> list[WebElement]:  # Если необходимо чтобы все элементы были видимыми
         return wait(self._driver, timeout).until(EC.visibility_of_all_elements_located(locator))
 
-    def _element_is_present(self, locator: tuple, timeout=5) -> WebElement: # Если необходимо проверить присутствия элемента в DOM.
+    def element_is_present(self, locator: tuple, timeout=5) -> WebElement: # Если необходимо проверить присутствия элемента в DOM.
         return wait(self._driver, timeout).until(EC.presence_of_element_located(locator))
 
-    def _element_are_present(self, locator: tuple, timeout=5) -> list[WebElement]: # Если необходимо проверить присутствия элементов в DOM.
+    def element_are_present(self, locator: tuple, timeout=5) -> list[WebElement]: # Если необходимо проверить присутствия элементов в DOM.
         return wait(self._driver, timeout).until(EC.presence_of_all_elements_located(locator))
 
-    def _go_to_element(self, element: WebElement):  # проскролить к искомому элементу
+    def go_to_element(self, element: WebElement):  # проскролить к искомому элементу
         self._driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    def _element_is_clickable(self, locator: tuple, timeout=5) -> WebElement:  # Чтобы элемент был кликабельным.
+    def element_is_clickable(self, locator: tuple, timeout=5) -> WebElement:  # Чтобы элемент был кликабельным.
         return wait(self._driver, timeout).until(EC.element_to_be_clickable(locator))
 
-    def _double_click_action(self, element: WebElement):
+    def double_click_action(self, element: WebElement):
         actions = ActionChains(self._driver)
         actions.double_click(element)
         actions.perform()
 
-    def _right_click_action(self, element: WebElement):
+    def right_click_action(self, element: WebElement):
         actions = ActionChains(self._driver)
         actions.context_click(element)
         actions.perform()
 
-    def _click_to_element(self, element: WebElement):
+    def click_to_element(self, element: WebElement):
         actions = ActionChains(self._driver)
         actions.move_to_element(element).click()
         actions.perform()
 
-    def _click_to_enter(self):
+    def click_to_enter(self):
         actions = ActionChains(self._driver)
         actions.send_keys(Keys.ENTER)
         actions.perform()
 
-    def _click_to_arrow_down(self):
+    def click_to_arrow_down(self):
         actions = ActionChains(self._driver)
         for i in range(random.randint(3, 20)):
             actions.send_keys(Keys.ARROW_DOWN)
         actions.perform()
 
-    def _remove_ads(self):
+    def remove_ads(self):
         self._driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
         self._driver.execute_script("document.getElementById('fixedban').remove();")
+
+
