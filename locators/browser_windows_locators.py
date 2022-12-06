@@ -13,3 +13,9 @@ class AlertPageLocator:
     CONFIRM_BTN = (By.ID, "confirmButton")
     CONFIRM_RESULT = (By.ID, "confirmResult")
     PROMT_BTN = (By, "promtButton")
+
+
+class FrameLocator:
+    FIRST_FRAME = (By.ID, "frame1")
+    SECOND_FRAME = (By.ID, "frame2")
+    TEXT_FRAME = (By.ID, "sampleHeading")

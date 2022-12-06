@@ -2,7 +2,7 @@ import time
 
 from selenium.webdriver.common.alert import Alert
 
-from locators.browser_windows_locators import BrowserWindowsLocator, AlertPageLocator
+from locators.browser_windows_locators import BrowserWindowsLocator, AlertPageLocator, FrameLocator
 from pages.base_page import BasePage
 
 
@@ -43,3 +43,25 @@ class AlertPage(BasePage):
             Alert(self._driver).accept()
         text = self.element_is_visible(self._locator.CONFIRM_RESULT).text
         return text
+
+
+class FramePage(BasePage):
+    _locator = FrameLocator()
+
+    def check_frame(self, frame_num: str) -> list:
+        if frame_num == "frame1":
+            frame = self.element_is_visible(self._locator.FIRST_FRAME)
+            width = frame.get_attribute("width")
+            height = frame.get_attribute("height")
+            self._driver.switch_to.frame(frame)
+            text = self.element_is_visible(self._locator.TEXT_FRAME).text
+            self._driver.switch_to.default_content()
+            return [width, height, text]
+        if frame_num == "frame2":
+            frame = self.element_is_visible(self._locator.SECOND_FRAME)
+            width = frame.get_attribute("width")
+            height = frame.get_attribute("height")
+            self._driver.switch_to.frame(frame)
+            text = self.element_is_visible(self._locator.TEXT_FRAME).text
+            self._driver.switch_to.default_content()
+            return [width, height, text]

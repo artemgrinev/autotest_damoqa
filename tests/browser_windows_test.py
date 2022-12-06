@@ -1,5 +1,5 @@
-from pages.browser_windows_page import BrowserWindow, AlertPage
-
+from pages.browser_windows_page import BrowserWindow, AlertPage, FramePage
+from pytest_check import check
 
 class TestBrowserWindow:
     def test_open_tab(self, driver):
@@ -39,3 +39,19 @@ class TestAlert:
         page.open()
         text = page.click_confirm_btn(cancel_alert=True)
         assert text == "You selected Cancel"
+
+
+class TestFrame:
+
+    def test_frame(self, driver):
+        page = FramePage(driver, "https://demoqa.com/frames")
+        page.open()
+        result_frame1 = page.check_frame("frame1")
+        result_frame2 = page.check_frame("frame2")
+        with check:
+            assert result_frame1 == ['500px', '350px', 'This is a sample page'], 'The frame does not exist'
+        with check:
+            assert result_frame2 == ['100px', '100px', 'This is a sample page'], 'The frame does not exist'
+
+
+
