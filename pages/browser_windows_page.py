@@ -2,7 +2,7 @@ import time
 
 from selenium.webdriver.common.alert import Alert
 
-from locators.browser_windows_locators import BrowserWindowsLocator, AlertPageLocator, FrameLocator
+from locators.browser_windows_locators import BrowserWindowsLocator, AlertPageLocator, FrameLocator, ModalDialogLocator
 from pages.base_page import BasePage
 
 
@@ -65,3 +65,22 @@ class FramePage(BasePage):
             text = self.element_is_visible(self._locator.TEXT_FRAME).text
             self._driver.switch_to.default_content()
             return [width, height, text]
+
+
+class ModalDialogPage(BasePage):
+    _locator = ModalDialogLocator()
+
+    def check_modal(self, small=False):
+        if small:
+            self.element_is_visible(self._locator.SMALL_BTN).click()
+            modal_width = self.element_is_present(self._locator.MODAL).size.get("width")
+            title_text = self.element_is_visible(self._locator.SM_TITLE_TEXT).text
+            body_text = self.element_is_visible(self._locator.SM_BODY_TEXT).text
+            return str(modal_width), title_text, str(len(body_text))
+        else:
+            self.element_is_visible(self._locator.LARGE_BTN).click()
+            modal_width = self.element_is_present(self._locator.MODAL).size.get("width")
+            title_text = self.element_is_visible(self._locator.TITLE_TEXT).text
+            body_text = self.element_is_visible(self._locator.BODY_TEXT).text
+            return str(modal_width), title_text, str(len(body_text))
+

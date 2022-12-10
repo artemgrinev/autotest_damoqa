@@ -1,4 +1,4 @@
-from pages.browser_windows_page import BrowserWindow, AlertPage, FramePage
+from pages.browser_windows_page import BrowserWindow, AlertPage, FramePage, ModalDialogPage
 from pytest_check import check
 
 class TestBrowserWindow:
@@ -54,4 +54,27 @@ class TestFrame:
             assert result_frame2 == ['100px', '100px', 'This is a sample page'], 'The frame does not exist'
 
 
+class TestModalDialog:
+    URL = "https://demoqa.com/modal-dialogs"
 
+    def test_modal_dialog(self, driver):
+        page = ModalDialogPage(driver, self.URL)
+        page.open()
+        modal_width, title_text, len_body = page.check_modal()
+        with check:
+            assert modal_width == "800", "window size does not match"
+        with check:
+            assert title_text == "Large Modal"
+        with check:
+            assert len_body == "574"
+
+    def test_small_modal_dialog(self, driver):
+        page = ModalDialogPage(driver, self.URL)
+        page.open()
+        modal_width, title_text, body_text = page.check_modal(small=True)
+        with check:
+            assert modal_width == "300"
+        with check:
+            assert title_text == "Small Modal"
+        with check:
+            assert body_text == "47"
