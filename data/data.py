@@ -12,3 +12,12 @@ class Person:
     age: int = None
     salary: int = None
     departament: str = None
+
+
+@dataclass
+class Date:
+    date: str = None
+    day: str = None
+    month: str = None
+    year: str = None
+    time: str = None

@@ -1,6 +1,6 @@
 import random
 
-from data.data import Person
+from data.data import Person, Date
 from faker import Faker
 
 faker_ru = Faker('ru_RU')
@@ -44,3 +44,13 @@ def generated_file() -> tuple:
     file.write(f'Hello World{random.randint(0, 999)}')
     file.close()
     return file.name, path
+
+
+def generated_date():
+    yield Date(
+        date=faker_us.date_this_century(),
+        year=faker_us.year(),
+        month=faker_us.month(),
+        day=faker_us.day_of_month(),
+        time="12:00"
+    )

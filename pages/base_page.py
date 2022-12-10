@@ -2,6 +2,7 @@ import random
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait as wait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains, Keys
@@ -62,5 +63,9 @@ class BasePage:
     def remove_ads(self):
         self._driver.execute_script("document.getElementsByTagName('footer')[0].remove();")
         self._driver.execute_script("document.getElementById('fixedban').remove();")
+
+    def set_element_by_visible_text(self, element: tuple, value: str):
+        select = Select(self.element_is_present(element))
+        select.select_by_visible_text(value)
 
 
