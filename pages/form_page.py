@@ -1,11 +1,7 @@
 import os
 import random
-import time
-from calendar import monthrange
 
-from selenium.webdriver.common.by import By
-
-from generator.generators import value_subjects, generated_file, generator_person_us
+from generator.generators import value_subjects, generated_file, generator_person_us, generated_date
 
 from locators.form_page_locators import WebFormLocators
 from pages.base_page import BasePage
@@ -22,7 +18,7 @@ class TextForm(BasePage):
         email = person_info.email
         mobile = "1005480054"
         current_address = person_info.current_address
-        subjects = value_subjects[random.randint(0, len(value_subjects))]
+        subjects = value_subjects[random.randint(0, len(value_subjects))-1]
         self.element_is_visible(self._locator.FIRST_NAME).send_keys(first_name)
         self.element_is_visible(self._locator.LAST_NAME).send_keys(last_name)
         self.element_is_visible(self._locator.EMAIL).send_keys(email)
@@ -32,44 +28,29 @@ class TextForm(BasePage):
         self.element_is_visible(self._locator.ADDRESS).send_keys(current_address)
         return f"{first_name} {last_name}", email, mobile, subjects, current_address.replace("\n", " ")
 
-    def select_random_month(self) -> tuple:
-        self.element_is_visible(self._locator.DATE_OF_BIRTH_INPUT).click()
-        month_num = random.randint(0, 11)
-        random_month = self.element_are_visible(self._locator.SELECT_MONTH)[month_num]
-        month = random_month.text
-        random_month.click()
-        return month, month_num
+    def select_random_date(self):
+        date = next(generated_date())
+        date_input = self.element_is_visible(self._locator.DATE_INPUT)
+        date_value_before = date_input.get_attribute("value")
+        date_input.click()
+        self.set_element_by_visible_text(self._locator.SELECT_MONTH, date.date.strftime('%B'))
+        self.set_element_by_visible_text(self._locator.SELECT_YEAR, str(date.date.year))
+        self.click_on_the_selected_element(self._locator.SELECT_DAYS_LIST, str(date.date.day))
+        date_value_after = date_input.get_attribute("value")
+        return date_value_before, date_value_after, date.date.strftime("%d %B,%Y")
 
-    def select_random_year(self) -> str:
-        random_year = self.element_are_visible(self._locator.SELECT_YEAR)[random.randint(0, 200)]
-        year = random_year.text
-        random_year.click()
-        return year
-
-    def select_random_day(self, year, month) -> str:
-        count_days = monthrange(year, month+1)[1]
-        random_day = random.randint(1, count_days)
-        if random_day > 9:
-            day = f"0{random_day}"
-        else:
-            day = f"00{random_day}"
-        element = self._driver.find_element(By.CSS_SELECTOR, f".react-datepicker__day.react-datepicker__day--{day}")
-        day = element.text
-        self.click_to_element(element)
-        return day
-
-    def get_result_deta(self) -> str:
-        element = self.element_is_present(self._locator.DATE_OF_BIRTH_INPUT).get_attribute('value')
-        day = element.split()[0]
-        month = element.split()[1]
-        year = element.split()[2]
-        return f"{int(day)} {month} {year}"
+    def click_on_the_selected_element(self, elements: tuple, value: str):
+        item_list = self.element_are_visible(elements)
+        for i in item_list:
+            if i.text == value:
+                i.click()
+                break
 
     def select_file(self) -> str:
         file_name, path = generated_file()
         self.element_is_present(self._locator.UPLOAD_PICTURE_BTN).send_keys(path)
         os.remove(path)
-        return file_name.split("\\")[-1]
+        return file_name.split("/")[-1]
 
     def select_random_radio(self) -> str:
         element = self.element_is_present(self._locator.ALL_GENDER_RADIO)

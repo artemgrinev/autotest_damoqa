@@ -11,13 +11,10 @@ class WebFormLocators:
     ADDRESS = (By.ID, "currentAddress")
 
     # Date Of Birth
-    DATE_OF_BIRTH_INPUT = (By.ID, "dateOfBirthInput")
-    PREVIOUS_MONTH_BTN = (By.CSS_SELECTOR, "button[aria-label='Previous Month']")
-    NEXT_MONTH_BTN = (By.CSS_SELECTOR, "button[aria-label='Next Month']")
-    MONTH_DROP_DAWN = (By.CLASS_NAME, "react-datepicker__month-select")
-    SELECT_MONTH = (By.XPATH, "//select[@class='react-datepicker__month-select']/option")
-    YEAR_DROP_DAWN = (By.CLASS_NAME, "react-datepicker__year-select")
-    SELECT_YEAR = (By.XPATH, "//select[@class='react-datepicker__year-select']/option") # 201 years
+    DATE_INPUT = (By.ID, "dateOfBirthInput")
+    SELECT_MONTH = (By.CLASS_NAME, "react-datepicker__month-select")
+    SELECT_YEAR = (By.CLASS_NAME, "react-datepicker__year-select")
+    SELECT_DAYS_LIST = (By.CSS_SELECTOR, ".react-datepicker__day.react-datepicker__day:not(.react-datepicker__day--outside-month)")
 
     SUBJECTS = (By.ID, "subjectsInput")
 

@@ -1,17 +1,16 @@
 import time
-
+from pytest_check import check
 from pages.form_page import TextForm
 
 
 class TestRegistrationForm:
+    URL = "https://demoqa.com/automation-practice-form"
+
     def test_registration_form(self, driver):
-        registration_page = TextForm(driver, "https://demoqa.com/automation-practice-form")
+        registration_page = TextForm(driver, self.URL)
         registration_page.open()
         full_name, email, mobile, subjects, current_address = registration_page.fill_all_text_fields()
-        month, month_num = registration_page.select_random_month()
-        year = registration_page.select_random_year()
-        day = registration_page.select_random_day(int(year), month_num)
-        full_deta = f"{day} {month},{year}"
+        date_value_before, date_value_after, date_value_select = registration_page.select_random_date()
         gender = registration_page.select_random_radio()
         hobbies = registration_page.select_random_checkbox()
         file_name = registration_page.select_file()
@@ -20,6 +19,20 @@ class TestRegistrationForm:
         registration_page.click_submit()
 
         result_data = registration_page.get_result_table()
-        selected_data = [full_name, email, gender, mobile, full_deta, subjects,
+        selected_data = [full_name, email, gender, mobile, date_value_select, subjects,
                          hobbies, file_name, current_address, address]
-        assert selected_data == result_data, "Полученная дата не соответствует выбранной"
+        try:
+            assert result_data == selected_data, "Received data does not match the selected"
+        except AssertionError:
+            for i in range(len(result_data)):
+                check.equal(result_data[i], selected_data[i])
+
+    def test_select_date(self, driver):
+        registration_page = TextForm(driver, self.URL)
+        registration_page.open()
+        date_value_before, date_value_after, date_value_select = registration_page.select_random_date()
+        print(date_value_before, date_value_after, date_value_select)
+        with check:
+            assert date_value_before != date_value_after, "Date has not changed"
+        with check:
+            assert date_value_select == date_value_after, "The selected date does not match the received date"

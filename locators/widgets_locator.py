@@ -14,7 +14,7 @@ class DatePickerLocator:
     DATE_AND_TIME_INPUT = (By.ID, "datePickerMonthYearInput")
     SELECT_MONTH = (By.CLASS_NAME, "react-datepicker__month-select")
     SELECT_YEAR = (By.CLASS_NAME, "react-datepicker__year-select")
-    SELECT_DAYS_LIST = (By.CSS_SELECTOR, ".react-datepicker__day.react-datepicker__day")
+    SELECT_DAYS_LIST = (By.CSS_SELECTOR, ".react-datepicker__day.react-datepicker__day:not(.react-datepicker__day--outside-month)")
 
     DATE_AND_TIME_INPUT = (By.ID, "dateAndTimePickerInput")
     DATE_AND_TIME_MONTH = (By.CLASS_NAME, "react-datepicker__month-read-view")

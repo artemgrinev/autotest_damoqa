@@ -1,3 +1,4 @@
+import os
 import random
 
 from data.data import Person, Date
@@ -39,11 +40,13 @@ def generator_person_us():
 
 
 def generated_file() -> tuple:
-    path = rf'C:\Users\Artem\projects\test_demoqa_webform\filetest{random.randint(0, 999)}.txt'
-    file = open(path, 'w+')
+    current_dir = os.path.abspath(__file__)
+    file_dir = "/".join(current_dir.split('/')[:-1])
+    path_to_file = rf'{file_dir}/filetest{random.randint(0, 999)}.txt'
+    file = open(path_to_file, 'w+')
     file.write(f'Hello World{random.randint(0, 999)}')
     file.close()
-    return file.name, path
+    return file.name, path_to_file
 
 
 def generated_date():
