@@ -1,5 +1,5 @@
 import random
-
+from pytest_check import check
 from pages.elements_page import TextBoxPage, CheckBoxPage, RadioButtonPage, WebTablePage, ButtonPage, LinksPage
 import time
 
@@ -11,10 +11,14 @@ class TestElements:
             text_box_page.open()
             full_name, email, current_address, permanent_address = text_box_page.fill_all_fields()
             output_name, output_email, output_cur_addr, output_perm_addr = text_box_page.check_fill_form()
-            assert full_name == output_name, "The full name does not match"
-            assert email == output_email, "The email does not match"
-            assert current_address == output_cur_addr, "The current address does not match"
-            assert permanent_address == output_perm_addr, "The permanent address does not match"
+            with check:
+                assert full_name == output_name, "The full name does not match"
+            with check:
+                assert email == output_email, "The email does not match"
+            with check:
+                assert current_address == output_cur_addr, "The current address does not match"
+            with check:
+                assert permanent_address == output_perm_addr, "The permanent address does not match"
 
     class TestCheckBox:
         def test_check_box(self, driver):
@@ -37,8 +41,10 @@ class TestRadioButton:
         output_no = radio_button_page.get_result()
         radio_button_page.click_random_radio_button("impressive")
         output_impressive = radio_button_page.get_result()
-        assert output_yes == "Yes", '"Yes" have not been selected'
-        assert output_impressive == "Impressive", '"Impressive" have not been selected'
+        with check:
+            assert output_yes == "Yes", '"Yes" have not been selected'
+        with check:
+            assert output_impressive == "Impressive", '"Impressive" have not been selected'
         assert output_no == "No", '"No" have not been selected'
 
 
@@ -94,9 +100,12 @@ class TestButtons:
         check_str_for_right_clk_btn = "You have done a right click"
         press_dynamic_clk_btn = button_page.check_dynamic_click()
         check_str_for_dynamic_clk_btn = "You have done a dynamic click"
-        assert press_double_clk_btn == check_str_for_double_clk_btn, "The double click button was not pressed"
-        assert press_right_clk_btn == check_str_for_right_clk_btn, "The right click button was not pressed"
-        assert press_dynamic_clk_btn == check_str_for_dynamic_clk_btn, "The click button was not pressed"
+        with check:
+            assert press_double_clk_btn == check_str_for_double_clk_btn, "The double click button was not pressed"
+        with check:
+            assert press_right_clk_btn == check_str_for_right_clk_btn, "The right click button was not pressed"
+        with check:
+            assert press_dynamic_clk_btn == check_str_for_dynamic_clk_btn, "The click button was not pressed"
 
 
 class TestLinks:
@@ -114,8 +123,11 @@ class TestLinks:
         no_content_status, no_content_href = links_page.no_content_get_status_code()
         created_status, created_href = links_page.created_get_status_code()
         not_found_status, not_found_href = links_page.not_found_get_status_code()
-        assert not_found_status == 404, f"when clicking on the link {not_found_href} received status {not_found_status}"
-        assert created_status == 201, f"when clicking on the link {created_href} received status {created_status}"
-        assert no_content_status == 204, f"when clicking on the link " \
-                                         f"{no_content_href} received status {no_content_status}"
-        assert good_status == 200, f"when clicking on the link {good_request_href} received status {good_status}"
+        with check:
+            assert not_found_status == 404, f"when clicking on the link {not_found_href} received status 404"
+        with check:
+            assert created_status == 201, f"when clicking on the link {created_href} received status 201"
+        with check:
+            assert no_content_status == 204, f"when clicking on the link {no_content_href} received status 204"
+        with check:
+            assert good_status == 200, f"when clicking on the link {good_request_href} received status 200"
