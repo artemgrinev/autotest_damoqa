@@ -1,5 +1,6 @@
 import time
 
+import allure
 from selenium.webdriver.common.alert import Alert
 
 from locators.browser_windows_locators import BrowserWindowsLocator, AlertPageLocator, FrameLocator, ModalDialogLocator
@@ -9,6 +10,7 @@ from pages.base_page import BasePage
 class BrowserWindow(BasePage):
     _locator = BrowserWindowsLocator()
 
+    @allure.step("Checking open windows")
     def check_open_window(self, tab=False) -> str:
         if tab:
             self.element_is_visible(self._locator.TAB_BUTTON).click()
@@ -22,12 +24,14 @@ class BrowserWindow(BasePage):
 class AlertPage(BasePage):
     _locator = AlertPageLocator()
 
+    @allure.step("Click alert button")
     def click_alert_btn(self) -> str:
         self.element_is_visible(self._locator.ALERT_BTN).click()
         text = Alert(self._driver).text
         Alert(self._driver).dismiss()
         return text
 
+    @allure.step("Click time alert button")
     def click_time_alert_btn(self) -> str:
         self.element_is_visible(self._locator.TIMER_ALERT_BTN).click()
         time.sleep(5)
@@ -35,6 +39,7 @@ class AlertPage(BasePage):
         Alert(self._driver).dismiss()
         return text
 
+    @allure.step("Click confirm button")
     def click_confirm_btn(self, cancel_alert=False) -> str:
         self.element_is_visible(self._locator.CONFIRM_BTN).click()
         if cancel_alert:
@@ -48,6 +53,7 @@ class AlertPage(BasePage):
 class FramePage(BasePage):
     _locator = FrameLocator()
 
+    @allure.step("Checking frame")
     def check_frame(self, frame_num: str) -> list:
         if frame_num == "frame1":
             frame = self.element_is_visible(self._locator.FIRST_FRAME)
@@ -70,6 +76,7 @@ class FramePage(BasePage):
 class ModalDialogPage(BasePage):
     _locator = ModalDialogLocator()
 
+    @allure.step("Checking modal")
     def check_modal(self, small=False):
         if small:
             self.element_is_visible(self._locator.SMALL_BTN).click()

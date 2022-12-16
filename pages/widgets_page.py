@@ -2,6 +2,8 @@ import time
 from calendar import monthrange
 import random
 
+import allure
+
 from generator.generators import generated_date
 from locators.widgets_locator import AutoCompleteLocator, DatePickerLocator, Sliderlocator, ProgressBarLocator, \
     MenuLocator
@@ -16,6 +18,7 @@ class AutoCompletePage(BasePage):
 class DatePickerPage(BasePage):
     _locator = DatePickerLocator()
 
+    @allure.step("Selected random date")
     def select_random_deta(self) -> tuple:
         date = next(generated_date())
         date_input = self.element_is_visible(self._locator.DATE_INPUT)
@@ -27,6 +30,7 @@ class DatePickerPage(BasePage):
         date_value_after = date_input.get_attribute("value")
         return date_value_before, date_value_after, date.date.strftime("%m/%d/%Y")
 
+    @allure.step("Click on the selected element")
     def click_on_the_selected_element(self, elements: tuple, value: str):
         item_list = self.element_are_visible(elements)
         for i in item_list:

@@ -1,11 +1,15 @@
 import time
+
+import allure
 from pytest_check import check
 from pages.form_page import TextForm
 
 
+@allure.suite("Registration Form")
 class TestRegistrationForm:
     URL = "https://demoqa.com/automation-practice-form"
 
+    @allure.feature('Filling out all forms')
     def test_registration_form(self, driver):
         registration_page = TextForm(driver, self.URL)
         registration_page.open()
@@ -27,6 +31,7 @@ class TestRegistrationForm:
             for i in range(len(result_data)):
                 check.equal(result_data[i], selected_data[i])
 
+    @allure.feature('Selecting date')
     def test_select_date(self, driver):
         registration_page = TextForm(driver, self.URL)
         registration_page.open()

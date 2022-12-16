@@ -1,15 +1,20 @@
+import allure
+
 from pages.widgets_page import DatePickerPage
 from pytest_check import check
 
 
+@allure.suite("Auto Complete")
 class TestAutoComplete:
     URL = "https://demoqa.com/auto-complete"
     pass
 
 
+@allure.suite("Date Picker")
 class TestDatePicker:
     URL = "https://demoqa.com/date-picker"
 
+    @allure.suite("Select date")
     def test_select_date(self, driver):
         page = DatePickerPage(driver, self.URL)
         page.open()
