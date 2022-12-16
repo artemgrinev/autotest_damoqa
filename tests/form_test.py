@@ -29,7 +29,8 @@ class TestRegistrationForm:
             assert result_data == selected_data, "Received data does not match the selected"
         except AssertionError:
             for i in range(len(result_data)):
-                check.equal(result_data[i], selected_data[i])
+                with check:
+                    assert result_data[i] == selected_data[i]
 
     @allure.feature('Selecting date')
     def test_select_date(self, driver):
